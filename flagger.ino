@@ -6,6 +6,10 @@
  * 
  */
 
+/**
+* Uncomment lines 87 to 89 to use a static IP
+*/
+
  /* IMPORTS */
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
@@ -27,6 +31,7 @@ const unsigned int RISEN_TIME = 10000;
 
 const char* ssid = "ssid";
 const char* password = "passwd";
+
 
 /* GLOBAL VARS */
 Servo myservo;
@@ -76,6 +81,14 @@ void setupPins()
 
 void setupWiFiConn()
 {
+  /*
+  IPAddress sip(192, 168, 0, 10);
+  IPAddress gateway(192, 168, 0, 1);
+  IPAddress subnet(255, 255, 255, 0);
+  */
+  WiFi.config(sip, gateway, subnet);
+  WiFi.mode(WIFI_STA); 
+  
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) {
     digitalWrite(gled, HIGH);
@@ -148,6 +161,7 @@ void planning()
   //#1 RISE FLAG
   if(flag_pos == 0 && rise_flag == 1 && lower_flag == 0){
     if(flag_angle < MAX_ANGLE){
+      delay(9);
       flag_angle++;
     }
     else{
@@ -169,6 +183,7 @@ void planning()
   //#3 LOWERING FLAG
   if(flag_pos == 1 && rise_flag == 0 && lower_flag == 1){
     if(flag_angle > MIN_ANGLE){
+      delay(9);
       flag_angle--;
     }
     else{
